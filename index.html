@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XRPLClient Test</title>
+    <script src="./bundle.min.js"></script>
+    <script src="https://xumm.app/assets/cdn/xumm.min.js"></script>
+    <script>
+        // Assuming XRPLClient is available in the global scope
+        let xrplClient;
+
+        function handleException(err) {
+            console.error('Error: ', err.message);
+        }
+
+        function handleConnect(type) {
+            if (type === 'xrpl-snap') {
+                xrplClient = new window.xrpl.XRPLClient(
+                    new window.xrpl.XRPLSnapAdapter()
+                );
+            } else {
+                xrplClient = new window.xrpl.XRPLClient(
+                    new window.xrpl.XamanAdapter("c89bd28c-791a-471d-a202-a285afd474f0")
+                );
+            }
+
+            xrplClient.connect(window.xrpl.Network.MAINNET);
+        }
+
+        function handleSign() {
+            if (xrplClient) {
+                // Replace with an actual transaction object
+                const transaction = {
+                    "TransactionType": "Payment",
+                    "Destination": "rBvTkVQikhuZBoC7p3zdVbnPr1JscUsuA1",
+                    "Amount": "1000000"
+                }; 
+
+                xrplClient.sign(transaction)
+                    .then(console.log)
+                    .catch(handleException);
+                // Add any additional logic or handling
+            } else {
+                console.log("Client not connected");
+            }
+        }
+
+    </script>
+</head>
+<body>
+    <h1>XRPL Snap</h1><br />
+    <button onclick="handleConnect('xrpl-snap')">Connect</button>
+    <button onclick="handleSign('xrpl-snap')">Sign Transaction</button>
+    <br />
+    <h1>Xaman</h1><br />
+    <button onclick="handleConnect('xaman')">Connect</button>
+    <button onclick="handleSign('xaman')">Sign Transaction</button>
+</body>
+</html>
